@@ -1,0 +1,39 @@
+{
+    "include": [
+        "src",
+        "notebooks",
+        "scripts",
+        "tests"
+    ],
+    "exclude": [
+        "**/__pycache__",
+        "**/node_modules",
+        "**/venv",
+        "**/.venv"
+    ],
+    "extraPaths": [
+        "${workspaceFolder}/src",
+        "${workspaceFolder}",
+        "src"
+    ],
+    "pythonVersion": "3.12",
+    "typeCheckingMode": "off",
+    "reportMissingImports": "none",
+    "reportMissingTypeStubs": false,
+    "reportUnusedImport": "none",
+    "reportUnusedVariable": "none",
+    "reportGeneralTypeIssues": "none",
+    "reportOptionalMemberAccess": "none",
+    "reportOptionalSubscript": "none",
+    "reportPrivateImportUsage": "none",
+    "reportArgumentType": "none",
+    "reportAssignmentType": "none",
+    "reportAttributeAccessIssue": "none",
+    "reportCallIssue": "none",
+    "reportIncompatibleMethodOverride": "none",
+    "reportIncompatibleVariableOverride": "none",
+    "reportOperatorIssue": "none",
+    "reportOverlappingOverload": "none",
+    "reportRedeclaration": "none",
+    "reportInconsistentConstructor": "none"
+}
