@@ -14,6 +14,7 @@
 - [Branch Structure](#branch-structure)
 - [Task 1: Data Analysis and Preprocessing](#task-1-data-analysis-and-preprocessing)
 - [Task 2: Model Building & Training](#task-2-model-building--training)
+- [Task 3: Model Explainability & Insights](#task-3-model-explainability--insights)
 - [Development Workflow](#development-workflow)
 - [Contributing](#contributing)
 - [License](#license)
@@ -152,6 +153,7 @@ You should see all required packages installed. Key packages include:
 - `main` - Production-ready code
 - `task-1-dev` - Task 1: Data Analysis and Preprocessing
 - `task-2-dev` - Task 2: Model Building & Training
+- `task-3-dev` - Task 3: Model Explainability & Insights
 
 ## Task 1: Data Analysis and Preprocessing
 
@@ -319,6 +321,101 @@ Navigate to `notebooks/modeling.ipynb` and run all cells. The notebook will:
 3. Perform cross-validation
 4. Compare models and select the best
 5. Save all artifacts to `/models` directory
+
+## Task 3: Model Explainability & Insights
+
+**Objective**: Interpret the selected fraud detection model to understand global and local drivers of fraud, validate model behavior, and produce actionable business recommendations.
+
+### Explainability Approach
+
+**SHAP (SHapley Additive exPlanations)**:
+- Game-theoretic foundation providing consistent, additive explanations
+- Captures feature interactions and non-linear effects
+- Provides both global (dataset-wide) and local (individual prediction) explanations
+- Essential for regulatory compliance and business stakeholder understanding
+
+**Why SHAP over Built-in Importance**:
+- Built-in importance shows average importance but lacks direction and context
+- SHAP values show actual impact on predictions (positive/negative)
+- SHAP accounts for feature interactions that built-in methods miss
+- SHAP enables individual prediction explanations (critical for audits)
+
+### Key SHAP Findings
+
+**Global Analysis**:
+- SHAP summary plot reveals feature importance ranking across all predictions
+- Mean absolute SHAP values identify top fraud drivers
+- Feature value distributions show risk patterns (high/low values)
+
+**Local Analysis**:
+- Force plots explain individual predictions (True Positives, False Positives, False Negatives)
+- Reveals why specific transactions are flagged or missed
+- Identifies model limitations and edge cases
+
+**Top Fraud Drivers**:
+- Top 5 features identified by SHAP importance
+- Direction of impact analyzed (which values increase/decrease fraud risk)
+- Feature interaction patterns revealed
+
+### Business Recommendations
+
+Each recommendation is:
+- **Directly linked to SHAP insights** - Based on quantifiable feature contributions
+- **Actionable** - Can be implemented as rules, alerts, or monitoring
+- **Business-focused** - Addresses fraud risk or customer experience
+
+**Example Recommendations**:
+1. **Enhanced Monitoring for Top Feature**: Implement real-time alerts when top fraud driver exceeds threshold
+2. **Reduce False Positives**: Adjust rules for features causing legitimate transactions to be flagged
+3. **Strengthen Detection**: Add business rules for patterns the model may miss
+4. **Feature Interaction Monitoring**: Monitor combinations of top features for enhanced detection
+5. **Time-Based Risk Rules**: Implement time-based verification for new accounts
+
+### Risk & Compliance Relevance
+
+**Regulatory Compliance**:
+- Model decisions are fully explainable via SHAP values
+- Individual predictions can be justified to regulators
+- Feature contributions are quantifiable and auditable
+- Documentation suitable for compliance reviews
+
+**Business Trust**:
+- Risk teams understand why transactions are flagged
+- Customer service can explain decisions to customers
+- Business stakeholders can validate model behavior
+- Enables confidence in production deployment
+
+### Artifacts Generated
+
+All explainability artifacts are saved to `/models` directory:
+- `shap_summary_plot.png` - Global feature importance visualization
+- `shap_force_plot_tp.png` - True positive case explanation
+- `shap_force_plot_fp.png` - False positive case explanation
+- `shap_force_plot_fn.png` - False negative case explanation
+- `feature_importance_comparison.png` - SHAP vs built-in importance comparison
+- `shap_business_recommendations.json` - Structured business recommendations
+
+### Running the Explainability Notebook
+
+After completing Task 2, run the explainability notebook:
+
+```bash
+# Start Jupyter Lab (if not already running)
+.\venv\Scripts\python.exe -m jupyter lab  # Windows
+jupyter lab  # Linux/Mac
+```
+
+Navigate to `notebooks/shap-explainability.ipynb` and run all cells. The notebook will:
+1. Load the selected ensemble model from Task 2
+2. Extract built-in feature importance (baseline)
+3. Generate SHAP values for global and local analysis
+4. Create visualizations (summary plot, force plots)
+5. Compare SHAP vs built-in importance
+6. Identify top 5 fraud drivers
+7. Generate business recommendations
+8. Save all artifacts to `/models` directory
+
+**Status**: ✅ Complete - Model explainability analysis completed, SHAP insights generated, business recommendations provided
 
 ## Development Workflow
 
