@@ -1,0 +1,30 @@
+{
+  "1": {
+    "title": "Enhanced Monitoring for purchase_value",
+    "insight": "SHAP analysis shows purchase_value is the strongest fraud driver (mean |SHAP|: 0.2533)",
+    "recommendation": "Implement real-time monitoring for transactions where purchase_value exceeds 0.75. These transactions should trigger additional verification steps.",
+    "implementation": "Create alert rule: IF purchase_value > 0.75 THEN require additional verification (2FA, manual review)",
+    "business_impact": "Reduces false negatives by catching high-risk transactions early, while maintaining customer experience for low-risk cases"
+  },
+  "2": {
+    "title": "Reduce False Positives for purchase_value",
+    "insight": "False positive analysis shows purchase_value contributes 1.6128 SHAP value to incorrect fraud flags",
+    "recommendation": "For transactions with purchase_value in the range that causes false positives, implement a secondary check before flagging as fraud. Consider whitelisting known good patterns.",
+    "implementation": "Create rule: IF purchase_value in [specific range] AND account_age > 30 days THEN reduce fraud score by 0.2",
+    "business_impact": "Improves customer experience by reducing false positives while maintaining fraud detection capability"
+  },
+  "3": {
+    "title": "Strengthen Detection for browser_Safari Pattern",
+    "insight": "False negative analysis reveals browser_Safari has high value (1.00) but low SHAP impact (-0.0728), indicating model may not be capturing this pattern effectively",
+    "recommendation": "Implement a business rule to flag transactions where browser_Safari exceeds 1.00 as high-risk, regardless of model prediction. Consider retraining with additional features that capture this pattern.",
+    "implementation": "Create rule: IF browser_Safari > 1.00 THEN set minimum fraud score to 0.6 (override model if lower)",
+    "business_impact": "Reduces financial loss by catching fraud patterns the model may miss, especially for edge cases"
+  },
+  "4": {
+    "title": "Monitor purchase_value and age Interaction",
+    "insight": "SHAP analysis identifies purchase_value and age as the top two fraud drivers. Their interaction may be critical for fraud detection.",
+    "recommendation": "Create a combined risk score that considers both purchase_value and age together. Transactions with both features in high-risk ranges should be flagged immediately.",
+    "implementation": "Create composite rule: IF (purchase_value > threshold1 AND age > threshold2) THEN flag as high-risk fraud",
+    "business_impact": "Improves detection accuracy by leveraging feature interactions that the model has learned"
+  }
+}
