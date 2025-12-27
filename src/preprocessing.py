@@ -431,18 +431,125 @@ def handle_class_imbalance(
         )
 
     if method == "smote":
+        # SMOTE requires numeric data only - ensure all columns are numeric
+        # Drop any object/categorical columns that can't be converted
+        X_train_numeric = X_train.copy()
+        cols_to_drop = []
+
+        for col in X_train_numeric.columns:
+            # Check if column is object or categorical dtype
+            is_object = X_train_numeric[col].dtype == "object"
+            is_categorical = pd.api.types.is_categorical_dtype(X_train_numeric[col])
+
+            if is_object or is_categorical:
+                # For categorical with string categories (like pd.cut results), drop it
+                if is_categorical:
+                    # Check if categories are non-numeric (strings)
+                    try:
+                        # Try to convert categories to numeric
+                        pd.to_numeric(
+                            X_train_numeric[col].cat.categories, errors="raise"
+                        )
+                        # If successful, convert the column
+                        X_train_numeric[col] = pd.to_numeric(
+                            X_train_numeric[col], errors="coerce"
+                        )
+                    except (ValueError, TypeError):
+                        # Categories are strings (like '2-5'), drop the column
+                        cols_to_drop.append(col)
+                        print(
+                            f"Warning: Dropping categorical column '{col}' with non-numeric categories before SMOTE"
+                        )
+                else:
+                    # For object dtype, try to convert
+                    try:
+                        X_train_numeric[col] = pd.to_numeric(
+                            X_train_numeric[col], errors="coerce"
+                        )
+                        # Check if conversion resulted in all NaN (meaning it failed)
+                        if X_train_numeric[col].isna().all():
+                            cols_to_drop.append(col)
+                            print(
+                                f"Warning: Dropping non-numeric column '{col}' before SMOTE"
+                            )
+                    except (ValueError, TypeError):
+                        cols_to_drop.append(col)
+                        print(
+                            f"Warning: Dropping non-numeric column '{col}' before SMOTE"
+                        )
+
+        # Drop problematic columns
+        if cols_to_drop:
+            X_train_numeric = X_train_numeric.drop(columns=cols_to_drop)
+
+        # Final check: ensure all remaining columns are numeric
+        X_train_numeric = X_train_numeric.select_dtypes(include=[np.number])
+
+        if X_train_numeric.empty:
+            raise ValueError(
+                "No numeric columns remaining after filtering. Check your data preprocessing."
+            )
+
         smote = SMOTE(sampling_strategy=sampling_strategy, random_state=42)
-        X_resampled, y_resampled = smote.fit_resample(X_train, y_train)
-        return pd.DataFrame(X_resampled, columns=X_train.columns), pd.Series(
+        X_resampled, y_resampled = smote.fit_resample(X_train_numeric, y_train)
+        return pd.DataFrame(X_resampled, columns=X_train_numeric.columns), pd.Series(
             y_resampled
         )
 
     elif method == "undersample":
+        # Undersampling also requires numeric data
+        X_train_numeric = X_train.copy()
+        cols_to_drop = []
+
+        for col in X_train_numeric.columns:
+            is_object = X_train_numeric[col].dtype == "object"
+            is_categorical = pd.api.types.is_categorical_dtype(X_train_numeric[col])
+
+            if is_object or is_categorical:
+                if is_categorical:
+                    try:
+                        pd.to_numeric(
+                            X_train_numeric[col].cat.categories, errors="raise"
+                        )
+                        X_train_numeric[col] = pd.to_numeric(
+                            X_train_numeric[col], errors="coerce"
+                        )
+                    except (ValueError, TypeError):
+                        cols_to_drop.append(col)
+                        print(
+                            f"Warning: Dropping categorical column '{col}' with non-numeric categories before undersampling"
+                        )
+                else:
+                    try:
+                        X_train_numeric[col] = pd.to_numeric(
+                            X_train_numeric[col], errors="coerce"
+                        )
+                        if X_train_numeric[col].isna().all():
+                            cols_to_drop.append(col)
+                            print(
+                                f"Warning: Dropping non-numeric column '{col}' before undersampling"
+                            )
+                    except (ValueError, TypeError):
+                        cols_to_drop.append(col)
+                        print(
+                            f"Warning: Dropping non-numeric column '{col}' before undersampling"
+                        )
+
+        if cols_to_drop:
+            X_train_numeric = X_train_numeric.drop(columns=cols_to_drop)
+
+        X_train_numeric = X_train_numeric.select_dtypes(include=[np.number])
+
+        if X_train_numeric.empty:
+            raise ValueError(
+                "No numeric columns remaining after filtering. Check your data preprocessing."
+            )
+
         undersampler = RandomUnderSampler(
             sampling_strategy=sampling_strategy, random_state=42
         )
-        X_resampled, y_resampled = undersampler.fit_resample(X_train, y_train)
-        return pd.DataFrame(X_resampled, columns=X_train.columns), pd.Series(
+        X_resampled, y_resampled = undersampler.fit_resample(X_train_numeric, y_train)
+        return pd.DataFrame(X_resampled, columns=X_train_numeric.columns), pd.Series(
             y_resampled
         )
 

@@ -1,0 +1,133 @@
+{
+  "timestamp": "2025-12-27T13:24:19.465336",
+  "baseline_results": {
+    "model_name": "Logistic Regression",
+    "test_auc_pr": 0.10317574740268669,
+    "test_f1": 0.12724261661606404,
+    "test_auc_roc": 0.5238062031013313,
+    "train_auc_pr": 0.10315329989285953,
+    "train_f1": 0.17033238139381887,
+    "confusion_matrix": [
+      [
+        23438,
+        3955
+      ],
+      [
+        2369,
+        461
+      ]
+    ],
+    "tn": 23438,
+    "fp": 3955,
+    "fn": 2369,
+    "tp": 461
+  },
+  "ensemble_results": {
+    "model_name": "XGBOOST",
+    "model_type": "xgboost",
+    "best_params": {
+      "learning_rate": 0.1,
+      "max_depth": 7,
+      "n_estimators": 200
+    },
+    "test_auc_pr": 0.09324229814707025,
+    "test_f1": 0.1177356595958328,
+    "test_auc_roc": 0.49361277074344784,
+    "train_auc_pr": 0.460224095190091,
+    "train_f1": 0.36954569940743404,
+    "confusion_matrix": [
+      [
+        22725,
+        4668
+      ],
+      [
+        2361,
+        469
+      ]
+    ],
+    "tn": 22725,
+    "fp": 4668,
+    "fn": 2361,
+    "tp": 469
+  },
+  "cv_results": {
+    "baseline": {
+      "auc_pr_mean": 0.10244761165083997,
+      "auc_pr_std": 0.0030387430592278206,
+      "f1_mean": 0.16618704866554507,
+      "f1_std": 0.0051289639952359235,
+      "fold_scores_aucpr": [
+        0.10424199124680464,
+        0.09814631476496667,
+        0.10205458696347955,
+        0.10706693144676524,
+        0.10072823383218382
+      ],
+      "fold_scores_f1": [
+        0.16910183193651265,
+        0.1582288279919492,
+        0.16956062207458855,
+        0.171865889212828,
+        0.16217807211184695
+      ]
+    },
+    "ensemble": {
+      "auc_pr_mean": 0.343870779453239,
+      "auc_pr_std": 0.002437265166595951,
+      "f1_mean": 0.3036763699026446,
+      "f1_std": 0.0023714644639289194,
+      "fold_scores_aucpr": [
+        0.3448162869372079,
+        0.3432846202591421,
+        0.3425977808112476,
+        0.34796256243049584,
+        0.34069264682810146
+      ],
+      "fold_scores_f1": [
+        0.30038147138964577,
+        0.30468158719861604,
+        0.30737793073779307,
+        0.30208891269416177,
+        0.30385194749300626
+      ]
+    }
+  },
+  "model_selection": {
+    "selected_model": "Logistic Regression",
+    "selection_reason": "Baseline model selected (better or similar performance, higher interpretability)",
+    "final_metrics": {
+      "test_auc_pr": 0.10317574740268669,
+      "test_f1": 0.12724261661606404,
+      "test_auc_roc": 0.5238062031013313
+    }
+  },
+  "comparison_table": {
+    "Metric": [
+      "AUC-PR (Test)",
+      "F1-Score (Test)",
+      "AUC-ROC (Test)",
+      "AUC-PR (CV Mean)",
+      "AUC-PR (CV Std)",
+      "F1-Score (CV Mean)",
+      "F1-Score (CV Std)"
+    ],
+    "Logistic Regression": [
+      "0.1032",
+      "0.1272",
+      "0.5238",
+      "0.1024",
+      "0.0030",
+      "0.1662",
+      "0.0051"
+    ],
+    "XGBOOST": [
+      "0.0932",
+      "0.1177",
+      "0.4936",
+      "0.3439",
+      "0.0024",
+      "0.3037",
+      "0.0024"
+    ]
+  }
+}
